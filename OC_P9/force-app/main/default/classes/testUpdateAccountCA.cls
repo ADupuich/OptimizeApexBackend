@@ -1,27 +1,56 @@
 @isTest
 private class testUpdateAccountCA {
-    @isTest static void test() {
-        Account acc1 = new Account(Name = 'Test Account 1');
-        insert acc1;
+  @isTest
+    private static void testAccountsCreation() {
+      List<Account> accounts = testDataFactory.GenerateRandomAccounts(10);
+      Test.startTest();
+        List<Account> checkAccts = [SELECT Id FROM Account];
+      Test.stopTest();
+      System.assert(checkAccts.size() == 10, 'Was expecting to find 10 Accounts');
+    }
+    @isTest
+    private static void testOrdersCreation() {
+        List<Account> accounts = testDataFactory.GenerateRandomAccounts(10);
+        Product2 chemiseVerte = testDataFactory.GenerateProducts();
+        PricebookEntry Pricebook = testDataFactory.GeneratePricebook(chemiseVerte);  
+        List<Order> newOrders = testDataFactory.GenerateRandomOrders(2, accounts, Pricebook);
+        Test.startTest();
+          List<Order> checkOrders = [SELECT Id FROM Order];
+        Test.stopTest();
 
-        Product2 pd1 = new Product2(Name = 'Chemise Verte longue XYX', Family = 'Chemise');
-        Insert pd1;
- 
-        //Create the PricebookEntry
-        PricebookEntry pbe = new PricebookEntry(
-            Pricebook2Id = Test.getStandardPricebookId(),
-            Product2Id = pd1.Id,
-            UnitPrice = 1020,
-            IsActive = true
-        );
-        Insert pbe;
-
-        Order o1 = new Order(AccountId = acc1.Id);
-        insert o1;
-
-        OrderItem oi1 = new OrderItemItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=10, UnitPrice = 150);
-        insert oi1;
-        OrderItem oi2 = new OrderItemItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=20, UnitPrice = 1000);
-        insert oi2;        
+        System.assert(checkOrders.size() ==2 , 'Was Expecting to have 2 orders');
+    }
+    @isTest
+    private static void testProductCreation() {
+      Product2 chemiseVerte = testDataFactory.GenerateProducts();
+      Test.startTest();
+        List<Product2> family = [SELECT Family FROM Product2 WHERE Name = 'Chemise Verte longue XYX'];
+      Test.stopTest();
+      System.assert(family.size() == 1, 'Y a pas de product là !!');
+    }    
+  @isTest
+    private static void TestPricebookCreation() {
+      //Test Data Setup
+      Product2 chemiseVerte = testDataFactory.GenerateProducts();
+      PricebookEntry Pricebook = testDataFactory.GeneratePricebook(chemiseVerte);  
+      //Perform Test  
+      Test.startTest();
+      List<PricebookEntry> checkPricebookEntry = [SELECT UnitPrice FROM PricebookEntry];
+      Test.stopTest();
+      System.assert(checkPricebookEntry.size() > 0, 'One PricebookEntry was expected');
+    }
+  @isTest
+    private static void TestOrderItemsCreation() {
+      //Test Data Setup
+      List<Account> accounts = testDataFactory.GenerateRandomAccounts(10);
+      Product2 chemiseVerte = testDataFactory.GenerateProducts();
+      PricebookEntry Pricebook = testDataFactory.GeneratePricebook(chemiseVerte); 
+      List<Order> newOrders = testDataFactory.GenerateRandomOrders(2, accounts, Pricebook);
+      OrderItem itemToOrder = testDataFactory.GenerateOrderItems(newOrders,Pricebook,10);
+      //Perform Test
+      Test.startTest();
+      List<OrderItem> checkOi = [SELECT Quantity FROM OrderItem];
+      Test.stopTest();
+      System.assert(checkOi.size() >= 1 , 'Man, where is the item from order plz ?');
     }
 }
