@@ -33,7 +33,7 @@ public with sharing class testDataFactory {
     }
 
     //This method create as many order as we need
-    public static List<Order> GenerateRandomOrders(Integer noOfOrders, List<Account> accounts, PricebookEntry Pricebook) {
+    public static List<Order> GenerateRandomOrders(Integer noOfOrders, List<Account> accounts, PricebookEntry Pricebook, Integer DesiredShipmentCost) {
         //create an orders List to use after
         List<Order> orders = new List<Order>();
         /*What we need to create an order in Fasha's Org
@@ -52,7 +52,8 @@ public with sharing class testDataFactory {
             Order odr = new Order (AccountId = referToAccount,
                                    EffectiveDate = Date.today(),
                                    Status = 'Draft',
-                                   Pricebook2Id = Pricebook.Pricebook2Id);
+                                   Pricebook2Id = Pricebook.Pricebook2Id,
+                                   shipmentCost__c = DesiredShipmentCost);
             orders.add(odr);
             }
         //insert and return the orders
