@@ -70,7 +70,7 @@ public with sharing class testDataFactory {
         }
         return oi;
     }
-    
+    //sans doute à supprimer
     public static List<Order> GenerateOrders(Integer noOfOrders, Integer ShipmentCost) {
         List<Order> orders = new List<Order>();
         for(Integer i=0;i<noOfOrders;i++){
