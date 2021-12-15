@@ -4,7 +4,9 @@ trigger orderTrigger on ORDER (before update, after update) {
         if(Trigger.isBefore){
             TriggerOrder.CalculNetAmountForOrder(newOrder);
         } else if (Trigger.isAfter) {
-            TriggerOrder.UpdateAccountCA(newOrder);
+            Set<Id> accountsId = TriggerOrder.AccountToUpdate(newOrder);
+            DataUpdate.UpdateAccountCA(accountsId);
+            
         }
     }      
 }

@@ -1,84 +1,60 @@
 @isTest
-public with sharing class testDataFactory {
-    //This test method create as many account as we need
-	public static List<Account> GenerateRandomAccounts(Integer noOfAccounts)
-	{
-		List<Account> accounts = new List<Account>();
-		for( Integer i = 0; i < noOfAccounts; i++ ) {
-			
-            Account accts = new Account( Name = 'Test Account '+i);
-			accounts.add(accts);
-		}
-        insert accounts;
-		return accounts;
-	}
-
-    //This test method create Product that we need to test Orders
-    public static Product2 GenerateProducts() {
-        Product2 chemiseVerte = new Product2(Name = 'Chemise Verte longue XYX', Family = 'Chemise');
-        insert chemiseVerte;
-        return chemiseVerte;
+private class TestDataFactory {
+  @isTest
+    private static void testAccountsCreation() {
+      List<Account> accounts = DataFactory.GenerateRandomAccounts(1);
+      Test.startTest();
+        List<Account> checkAccts = [SELECT Id FROM Account];
+      Test.stopTest();
+      System.assert(checkAccts.size() == 1, 'Was expecting to find 10 Accounts');
     }
 
-    //This test method create PricebookEntry
-    public static PricebookEntry GeneratePricebook(Product2 chemiseVerte) {
-        PricebookEntry Pricebook = new PricebookEntry(
-        Pricebook2Id = Test.getStandardPricebookId(),
-        Product2Id = chemiseVerte.Id,
-        UnitPrice = 1020,
-        IsActive = true
-        );
-        insert Pricebook;
-        return Pricebook;
+    @isTest
+    private static void testProductCreation() {
+      Product2 chemiseVerte = DataFactory.GenerateProducts();
+      Test.startTest();
+        List<Product2> family = [SELECT Family FROM Product2 WHERE Name = 'Chemise Verte longue XYX'];
+      Test.stopTest();
+      System.assert(family.size() == 1, 'Y a pas de product là !!');
+    }    
+  @isTest
+    private static void testPricebookCreation() {
+      //Test Data Setup
+      Product2 chemiseVerte = DataFactory.GenerateProducts();
+      PricebookEntry Pricebook = DataFactory.GeneratePricebook(chemiseVerte);  
+      //Perform Test  
+      Test.startTest();
+      List<PricebookEntry> checkPricebookEntry = [SELECT UnitPrice FROM PricebookEntry];
+      Test.stopTest();
+      System.assert(checkPricebookEntry.size() > 0, 'One PricebookEntry was expected');
+    }
+    
+    @isTest
+    private static void testOrdersCreation() {
+        List<Account> accounts = DataFactory.GenerateRandomAccounts(10);
+        Product2 chemiseVerte = DataFactory.GenerateProducts();
+        PricebookEntry Pricebook = DataFactory.GeneratePricebook(chemiseVerte);  
+        List<Order> newOrders = DataFactory.GenerateRandomOrders(2, accounts, Pricebook,10);
+        Test.startTest();
+          List<Order> checkOrders = [SELECT Id FROM Order];
+        Test.stopTest();
+
+        System.assert(checkOrders.size() ==2 , 'Was Expecting to have 2 orders');
     }
 
-    //This method create as many order as we need
-    public static List<Order> GenerateRandomOrders(Integer noOfOrders, List<Account> accounts, PricebookEntry Pricebook, Integer DesiredShipmentCost) {
-        //create an orders List to use after
-        List<Order> orders = new List<Order>();
-        /*What we need to create an order in Fasha's Org
-        We need accountId. This is to catch only accountsId to easely use them when we are going to create orders*/
-        List<Id> listAccountsId = new List<Id>();
-        for (Account a : accounts) {
-            listAccountsId.add(a.Id);
-        }
-        //Now let's add the orders in the list with one of AccountId prepared before
-        for (Integer i = 0; i < noOfOrders; i++) {
-            //this is to select a random index in listAccountsId
-            Integer t = Integer.valueof((Math.random() * (listAccountsId.size()-1)));
-            //this is to get the ID that the random index refer
-            Id referToAccount = listAccountsId.get(t);
-            //now we can create the order and pass it an account ID with the required informations          
-            Order odr = new Order (AccountId = referToAccount,
-                                   EffectiveDate = Date.today(),
-                                   Status = 'Draft',
-                                   Pricebook2Id = Pricebook.Pricebook2Id,
-                                   shipmentCost__c = DesiredShipmentCost);
-            orders.add(odr);
-            }
-        //insert and return the orders
-        insert orders;
-        return orders;
+  @isTest
+    private static void testOrderItemsCreation() {
+      //Test Data Setup
+      List<Account> accounts = DataFactory.GenerateRandomAccounts(10);
+      Product2 chemiseVerte = DataFactory.GenerateProducts();
+      PricebookEntry Pricebook = DataFactory.GeneratePricebook(chemiseVerte); 
+      List<Order> newOrders = DataFactory.GenerateRandomOrders(2, accounts, Pricebook,10);
+      OrderItem itemToOrder = DataFactory.GenerateOrderItems(newOrders,Pricebook,10);
+      //Perform Test
+      Test.startTest();
+      List<OrderItem> checkOi = [SELECT Quantity FROM OrderItem];
+      Test.stopTest();
+      System.assert(checkOi.size() >= 1 , 'Man, where is the item from order plz ?');
     }
-
-    //This test method create Order Item related to an existing order
-    public static OrderItem GenerateOrderItems(List<Order> orders, PricebookEntry Pricebook, Integer desiredQuantity) {
-        OrderItem oi;
-        for (Order o : orders) {
-           oi = new OrderItem(OrderId = o.Id, PricebookEntryId = Pricebook.Id, Quantity = desiredQuantity, UnitPrice = Pricebook.UnitPrice);
-           insert oi;
-        }
-        return oi;
-    }
-    //sans doute à supprimer
-    public static List<Order> GenerateOrders(Integer noOfOrders, Integer ShipmentCost) {
-        List<Order> orders = new List<Order>();
-        for(Integer i=0;i<noOfOrders;i++){
-            Order ord = new Order();
-            ord.shipmentCost__c = ShipmentCost;
-        }
-        insert orders;
-        return orders;
-    }
-
 }
+
