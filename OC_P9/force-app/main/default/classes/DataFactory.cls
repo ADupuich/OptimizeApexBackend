@@ -3,7 +3,6 @@ public class DataFactory {
 	public static List<Account> GenerateRandomAccounts(Integer noOfAccounts) {
 		List<Account> accounts = new List<Account>();
 		for( Integer i = 0; i < noOfAccounts; i++ ) {
-			
             Account accts = new Account( Name = 'Test Account '+i);
 			accounts.add(accts);
 		}

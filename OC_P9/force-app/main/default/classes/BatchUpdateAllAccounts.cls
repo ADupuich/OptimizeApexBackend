@@ -3,7 +3,7 @@ global class BatchUpdateAllAccounts implements Database.Batchable<sObject>{
     global Database.QueryLocator start(Database.BatchableContext info){ 
         //Requeter seulement les comptes qui ont au moins une commande avec le Status 'Ordered'
         //modifier la requête pour filtrer
-        return Database.getQueryLocator('SELECT Id FROM Account');
+        return Database.getQueryLocator('SELECT Id FROM Account WHERE Chiffre_d_affaire__c !=null' );
     }
      
     global void execute(Database.BatchableContext info, List<Account> scope){
