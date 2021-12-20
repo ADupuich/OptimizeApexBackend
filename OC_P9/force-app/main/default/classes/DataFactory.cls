@@ -1,5 +1,5 @@
 public class DataFactory {
-    //This test method create as many account as we need
+//This test method creates as many account as we need
 	public static List<Account> GenerateRandomAccounts(Integer noOfAccounts) {
 		List<Account> accounts = new List<Account>();
 		for( Integer i = 0; i < noOfAccounts; i++ ) {
@@ -10,14 +10,14 @@ public class DataFactory {
         return accounts;
 	}
 
-    //This test method create Product that we need to test Orders
+//This test method creates Product that we need to test Orders
     public static Product2 GenerateProducts() {
         Product2 chemiseVerte = new Product2(Name = 'Chemise Verte longue XYX', Family = 'Chemise');
         insert chemiseVerte;
         return chemiseVerte;
     }
 
-    //This test method create PricebookEntry
+//This test method creates PricebookEntry
     public static PricebookEntry GeneratePricebook(Product2 chemiseVerte) {
         PricebookEntry Pricebook = new PricebookEntry(
         Pricebook2Id = Test.getStandardPricebookId(),
@@ -29,7 +29,7 @@ public class DataFactory {
         return Pricebook;
     }
 
-    //This method create as many order as we need
+//This method create as many order as we need
     public static List<Order> GenerateRandomOrders(Integer noOfOrders, List<Account> accounts, PricebookEntry Pricebook, Integer DesiredShipmentCost) {
         //create an orders List to use after
         List<Order> orders = new List<Order>();
@@ -53,12 +53,11 @@ public class DataFactory {
                                    shipmentCost__c = DesiredShipmentCost);
             orders.add(odr);
             }
-        //insert and return the orders
         insert orders;
         return orders;
     }
 
-    //This test method create Order Item related to an existing order
+//This test method create Order Item related to an existing order
     public static OrderItem GenerateOrderItems(List<Order> orders, PricebookEntry Pricebook, Integer desiredQuantity) {
         List<OrderItem> ordersWithItem = new List<OrderItem>();
         OrderItem oi;
@@ -70,7 +69,8 @@ public class DataFactory {
         update orders;
         return oi;
     }
-    //Add OrderItem for new order when it's necessary
+
+//Add OrderItem for new order when we are testing an order modification
     public static OrderItem AddOrderItems(Id ordersId, Id Pricebook2Id, Integer desiredPrice) {
         OrderItem oi = new OrderItem(OrderId = ordersId, 
                               PricebookEntryId = Pricebook2Id, 
