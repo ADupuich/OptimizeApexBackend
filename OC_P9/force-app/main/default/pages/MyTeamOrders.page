@@ -1,6 +1,4 @@
 <apex:page controller="MyTeamOrdersController" >
-    <div>
-
         <apex:pageBlock title="Résultats de l'équipe">
             <apex:form >
                 <apex:pageBlockSection  title = "Sélectionnez une équipe :">
@@ -10,13 +8,27 @@
                             <apex:selectOptions value="{!teamOption}" />
                         </apex:selectList>
                     </apex:pageBlockSectionItem>
+                    <apex:commandButton value="Search" onclick="{!SumOrders} €; {!TeamOrders}; return false;"/>
                 </apex:pageBlockSection>
                 <apex:pageBlockSection title ='Sum of my team orders :'>
                         <apex:outputText value=" {!SumOrders} €"/>
                 </apex:pageBlockSection>
-                <apex:pageBlockSection title ='Details of team Orders by Commercial :'>
-            </apex:pageBlockSection>
-          </apex:form>
+                <apex:pageBlockSection title ='List of Orders by Owner for the Selected Team'>
+                    <apex:pageBlockTable value = "{!TeamOrders}" var="order">
+                        <apex:column>
+                            <apex:facet name="header">Order Number :</apex:facet> 
+                            <apex:outputText value = '{!order.OrderNumber}'/>
+                        </apex:column>
+                        <apex:column>
+                            <apex:facet name="header">Owner :</apex:facet> 
+                            <apex:outputText value = '{!order.Owner.Name}'/>
+                        </apex:column>
+                        <apex:column>
+                            <apex:facet name="header">Total Amount :</apex:facet> 
+                            <apex:outputText value = '{!order.TotalAmount} €'/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:form>
         </apex:pageBlock>
-    </div>
 </apex:page>
