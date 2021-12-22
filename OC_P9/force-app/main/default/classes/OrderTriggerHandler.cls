@@ -1,4 +1,4 @@
-public class TriggerOrder {
+public class OrderTriggerHandler {
 
 
     public static void CalculNetAmountForOrder(List<Order> newOrder) {

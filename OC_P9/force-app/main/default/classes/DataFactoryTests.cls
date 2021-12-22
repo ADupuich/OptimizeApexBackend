@@ -1,5 +1,5 @@
 @isTest
-private class TestDataFactory {
+private class DataFactoryTests {
   @isTest
     private static void testAccountsCreation() {
       List<Account> accounts = DataFactory.GenerateRandomAccounts(1);

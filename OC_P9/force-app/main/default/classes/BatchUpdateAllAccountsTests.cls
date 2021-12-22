@@ -1,5 +1,5 @@
 @isTest
-private class TestBatchUpdateAllAccounts {
+private class BatchUpdateAllAccountsTests {
 
     @TestSetup
     static void TestSetupForTrigger(){

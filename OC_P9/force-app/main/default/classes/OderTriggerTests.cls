@@ -1,5 +1,5 @@
 @isTest
-private class TestTrigger {
+private class OderTriggerTests {
 
 @TestSetup
 static void TestSetupForTrigger(){

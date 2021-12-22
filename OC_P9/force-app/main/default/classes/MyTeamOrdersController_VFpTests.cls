@@ -1,5 +1,5 @@
 @isTest
-private class TestMyTeamOrdersController {
+private class MyTeamOrdersController_VFpTests {
 
 @TestSetup
 static void makeData() {       

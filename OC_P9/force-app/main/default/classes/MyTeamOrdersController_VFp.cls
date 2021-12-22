@@ -1,4 +1,4 @@
-public class MyTeamOrdersController {
+public class MyTeamOrdersController_VFp {
 
     public List<User> usersList;
     public List<Order> relatedOrders;
@@ -17,7 +17,7 @@ public class MyTeamOrdersController {
     }
     public decimal SumOrders {
         get{
-            return ActionsForMyTeamOrders.getTotalForTeam(usersList, selectedTeam);
+            return ActionsForMyTeamOrders.getTotalForTeam(usersList, selectedTeam,relatedOrders);
         }
         set;
     }

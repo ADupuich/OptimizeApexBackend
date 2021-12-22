@@ -1,10 +1,10 @@
-trigger orderTrigger on ORDER (before update, after update) {
+trigger OrderTrigger on ORDER (before update, after update) {
     if (Trigger.isUpdate) {
         List<Order> newOrder = trigger.new;
         if(Trigger.isBefore){
-            TriggerOrder.CalculNetAmountForOrder(newOrder);
+            OrderTriggerHandler.CalculNetAmountForOrder(newOrder);
         } else if (Trigger.isAfter) {
-            Set<Id> accountsId = TriggerOrder.AccountToUpdate(newOrder);
+            Set<Id> accountsId = OrderTriggerHandler.AccountToUpdate(newOrder);
             DataUpdate.UpdateAccountCA(accountsId);
             
         }
