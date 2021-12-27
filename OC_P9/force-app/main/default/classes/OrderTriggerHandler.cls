@@ -1,6 +1,4 @@
 public class OrderTriggerHandler {
-
-
     public static void CalculNetAmountForOrder(List<Order> newOrder) {
 
         for (Order o : newOrder) {

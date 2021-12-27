@@ -1,4 +1,4 @@
-<apex:page controller="MyTeamOrdersController" >
+<apex:page controller="MyTeamOrdersController_VFp" >
         <apex:pageBlock title="Résultats de l'équipe">
             <apex:form >
                 <apex:pageBlockSection  title = "Sélectionnez une équipe :">
