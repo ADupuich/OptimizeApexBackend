@@ -16,7 +16,7 @@ static void TestSetupForTrigger(){
 private static void TestTriggerBeforeUpdateOrder() {
   //Perform Test
   Test.startTest();
-  List<Order> orders = [SELECT Status FROM Order LIMIT 25];
+  List<Order> orders = [SELECT Status FROM Order];
   List<Order> ordersToUpdate = new List<Order>();
     for (Order o : orders) {
       o.Status = 'Ordered';
@@ -40,6 +40,13 @@ private static void TestTriggerBeforeUpdateOrder() {
 private static void TestTriggerAfterUpdateOrder() {
     //Perform Test
     Test.startTest();
+    List<Order> ordersChangeStatus = [SELECT Status FROM Order];
+    List<Order> ordersToUpdate = new List<Order>();
+      for (Order o : ordersChangeStatus) {
+        o.Status = 'Ordered';
+        ordersToUpdate.add(o);
+      }
+      update ordersToUpdate;
     //prendre account et chiffre d'affaire avant de lancer un update sur une order
     List<Account> accList = [SELECT Chiffre_d_affaire__c FROM Account];
     Account selectedAcc = accList.get(0);

@@ -17,6 +17,15 @@ private class BatchUpdateAllAccountsTests {
     Test.startTest();
     //We are going to change the price of an OrderItem and if the Account Chiffre_d_affaire__c is correctly update when we are doing the Batch
     //So let's modifying the UnitPrice of Order Item
+    List<Order> orderChangeStatus = new List<Order>();
+    orderChangeStatus = [SELECT ID, status FROM Order];
+    List<Order> orderToUpdate = new List<Order>();
+    for (order o : orderChangeStatus) {
+        o.Status = 'ordered';   
+        orderToUpdate.add(o);     
+    }
+    Update orderToUpdate;
+
     List<OrderItem> orderItemList = [SELECT Id, UnitPrice FROM OrderItem];
     List<OrderItem> orderItemToUpdate = new List<OrderItem>();
     for (OrderItem oi : orderItemList) {
@@ -24,7 +33,7 @@ private class BatchUpdateAllAccountsTests {
         orderItemToUpdate.add(oi);
     }
     Update orderItemToUpdate;
-
+    
     //Now the price is updated we are going to launch the Batch
     BatchUpdateAllAccounts batchTest = new BatchUpdateAllAccounts();
     Database.executeBatch(batchTest);
